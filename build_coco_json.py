@@ -1,5 +1,7 @@
 import json
 import os
+import pathlib
+
 import numpy as np
 import cv2
 
@@ -15,6 +17,9 @@ def first_check(counter):
         string = "img_" + str(counter) + ".jpg"
 
     return string
+
+path = pathlib.Path(__file__).parent
+images = os.listdir(str(path) + '\images\ground_truth\\')
 
 
 data = {}
@@ -48,14 +53,13 @@ data['categories'].append({
         }
 )
 
-images = os.listdir('E:/Desktop/file/yolo_v5_2/samples/')
 
 counter = 0
 index = 100000
 
 for image in images:
     counter += 1
-    im = cv2.imread('E:/Desktop/file/yolo_v5_2/samples/' + image)
+    im = cv2.imread(str(path) + '\images\ground_truth\\' + image)
     hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)  # change color format
 
     lower_blue = np.array([90, 50, 70])

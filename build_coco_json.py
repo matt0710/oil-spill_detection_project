@@ -1,7 +1,5 @@
 import json
 import os
-import pathlib
-
 import numpy as np
 import cv2
 
@@ -50,15 +48,14 @@ data['categories'].append({
         }
 )
 
-path = pathlib.Path(__file__).parent
-images = os.listdir(str(path) + '\images\ground_truth\\')
+images = os.listdir('E:/Desktop/file/yolo_v5_2/samples/')
 
 counter = 0
 index = 100000
 
 for image in images:
     counter += 1
-    im = cv2.imread(str(path) + '\images\ground_truth\\' + image)
+    im = cv2.imread('E:/Desktop/file/yolo_v5_2/samples/' + image)
     hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)  # change color format
 
     lower_blue = np.array([90, 50, 70])
@@ -70,31 +67,33 @@ for image in images:
     annotations = []
     bbox = []
 
-    data['images'].append(
-        {
-            "id": counter,
-            "license": 1,
-            "file_name": first_check(counter),
-            "height": 650,
-            "width": 1250,
-            "date_captured": "2021-12-21T15:33:06+00:00"
-        }
-    )
+    if len(contours) != 0:
 
-    for contour in contours:
-        area = cv2.contourArea(contour)
-        if area > 10:
-            x, y, w, h = cv2.boundingRect(contour)
-            data['annotations'].append({
-                "id": index,
-                "image_id": counter,
-                "category_id": 0,
-                "bbox": [x, y, w, h],
-                "area": area,
-                "segmentation": [contour.astype(float).flatten().tolist()],
-                "iscrowd": 0
-                }
-            )
-            index += 1
+        data['images'].append(
+            {
+                "id": counter,
+                "license": 1,
+                "file_name": first_check(counter),
+                "height": 650,
+                "width": 1250,
+                "date_captured": "2021-12-21T15:33:06+00:00"
+            }
+        )
+
+        for contour in contours:
+            area = cv2.contourArea(contour)
+            if area > 10:
+                x, y, w, h = cv2.boundingRect(contour)
+                data['annotations'].append({
+                    "id": index,
+                    "image_id": counter,
+                    "category_id": 0,
+                    "bbox": [x, y, w, h],
+                    "area": area,
+                    "segmentation": [contour.astype(float).flatten().tolist()],
+                    "iscrowd": 0
+                    }
+                )
+                index += 1
 
 json.dump(data, out_file)

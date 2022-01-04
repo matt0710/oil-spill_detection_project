@@ -1,7 +1,4 @@
 import os
-import cv2
-import numpy as np
-import pathlib
 
 from util.models import yolov4
 from util.models import yolov5

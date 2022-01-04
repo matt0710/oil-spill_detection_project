@@ -1,4 +1,8 @@
 import os
+import cv2
+import numpy as np
+import pathlib
+
 from util.models import yolov4
 from util.models import yolov5
 from util.models import yolov5s6
@@ -12,17 +16,17 @@ images = os.listdir(str(os.getcwd()) + '\images\\test_images\\')
 if model_name == 'yolov4':
     my_yolov4 = yolov4.create_model()
     for image in images:
-        yolov4.run_model(my_yolov4, str(os.getcwd()) + '\images\\test_images\\' + image)
+        yolov4.run_model(my_yolov4, str(os.getcwd()) + '\images\\test_images\\' + image, str(os.getcwd()) + '\images\\ground_truth\\' + image)
 
 elif model_name == 'yolov5s':
     my_yolov5 = yolov5.create_model()
     for image in images:
-        yolov5.run_model(my_yolov5, str(os.getcwd()) + '\images\\test_images\\' + image)
+        yolov5.run_model(my_yolov5, str(os.getcwd()) + '\images\\test_images\\' + image, str(os.getcwd()) + '\images\\ground_truth\\' + image)
 
 elif model_name == 'yolov5s6':
     my_yolov5s6 = yolov5s6.create_model()
     for image in images:
-        yolov5s6.run_model(my_yolov5s6, str(os.getcwd()) + '\images\\test_images\\' + image)
+        yolov5s6.run_model(my_yolov5s6, str(os.getcwd()) + '\images\\test_images\\' + image, str(os.getcwd()) + '\images\\ground_truth\\' + image)
 
 else:
     print("Usage error: the implemented models are <yolov4> <yolov5s> <yolov5s6>")

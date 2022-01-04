@@ -15,6 +15,30 @@ modelConfiguration = str(parent) + "\sources\yolov4\\yolov4-tiny-oil_spill.cfg"
 modelWeight = str(parent) + "\sources\yolov4\\yolov4-tiny-oil_spill_v5_v1.weights"
 
 
+def print_ground_truth(im):
+
+    im = str(im).replace("jpg", "png")
+
+    img = cv2.imread(im)
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)  # change color format
+
+    lower_blue = np.array([90, 50, 70])
+    upper_blue = np.array([128, 255, 255])
+    mask = cv2.inRange(hsv, lower_blue, upper_blue)
+
+    contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+
+    for contour in contours:
+        area = cv2.contourArea(contour)
+
+        if area > 10:
+            cv2.drawContours(mask, contour, -1, (0, 255, 0), 3)  # -1 draw all countours
+            x, y, w, h = cv2.boundingRect(contour)
+            cv2.rectangle(mask, (x, y), (x + w, y + h), (255, 255, 0), 2)
+
+    cv2.imshow("mask", mask)
+
+
 def create_model():
     net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeight)
     net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
@@ -52,7 +76,7 @@ def find_objects(outputs, img):
                     (x, y - 10), cv2.FONT_ITALIC, 0.6, (255, 0, 255), 2)
 
 
-def run_model(net, img):
+def run_model(net, img, ground_truth_path):
     cap = cv2.imread(img)
     blob = cv2.dnn.blobFromImage(cap, 1 / 255, (whT, whT), [0, 0, 0], 1, crop=False)
 
@@ -60,11 +84,11 @@ def run_model(net, img):
 
     layerNames = net.getLayerNames()
     outputNames = [layerNames[i - 1] for i in net.getUnconnectedOutLayers()]
-    #print(outputNames)
 
     outputs = net.forward(outputNames)
 
     find_objects(outputs, cap)
 
     cv2.imshow("Image", cap)
+    print_ground_truth(ground_truth_path)
     cv2.waitKey(0)

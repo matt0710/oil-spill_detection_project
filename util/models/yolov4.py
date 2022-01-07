@@ -69,6 +69,7 @@ def find_objects(outputs, img):
     indices = cv2.dnn.NMSBoxes(bbox, confs, confThreshold, nmsThreshold)
 
     for i in indices:
+        i = np.squeeze(i)
         box = bbox[i]
         x, y, w, h = box[0], box[1], box[2], box[3]
         cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 255), 2)
@@ -83,7 +84,7 @@ def run_model(net, img, ground_truth_path):
     net.setInput(blob)
 
     layerNames = net.getLayerNames()
-    outputNames = [layerNames[i - 1] for i in net.getUnconnectedOutLayers()]
+    outputNames = [layerNames[np.squeeze(i) - 1] for i in net.getUnconnectedOutLayers()]
 
     outputs = net.forward(outputNames)
 

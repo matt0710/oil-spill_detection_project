@@ -64,6 +64,7 @@ def find_objects(outputs, img):
     indices = cv2.dnn.NMSBoxes(bbox, confs, confThreshold, nmsThreshold)
 
     for i in indices:
+        i = np.squeeze(i)
         box = bbox[i]
         x_min, y_min, x_max, y_max = box[0], box[1], box[2], box[3]
         cv2.rectangle(img, (x_min, y_min), (x_max, y_max), (255, 0, 255), 2)

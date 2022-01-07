@@ -29,7 +29,7 @@ data['categories'] = []
 data['images'] = []
 data['annotations'] = []
 
-out_file = open("train_polygon.json", "w")
+out_file = open("coco_annotations.json", "w")
 
 data['info'].append(
     {"year": "2021",

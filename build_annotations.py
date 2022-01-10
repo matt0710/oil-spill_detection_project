@@ -32,10 +32,10 @@ def second_check(counter):
     if counter < 10:
         string = "img_000" + str(counter) + ".xml"
 
-    elif 10 < counter < 100:
+    elif 10 <= counter < 100:
         string = "img_00" + str(counter) + ".xml"
 
-    elif 100 < counter < 1000:
+    elif 100 <= counter < 1000:
         string = "img_0" + str(counter) + ".xml"
 
     else:
